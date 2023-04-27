@@ -1,5 +1,5 @@
 type Props = {
-    cell: Cell
+    cell: Cell | null
 }
 
 interface Cell{
@@ -11,7 +11,7 @@ interface Cell{
 export default function Cell({cell}: Props) {
   return (
     <div>
-        {cell.type}
+        {cell?.type}
     </div>
   )
 }
