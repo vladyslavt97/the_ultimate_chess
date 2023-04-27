@@ -10,9 +10,9 @@ export default function Chessboard({}: Props) {
     console.log(chessBoard);
     
     return (
-        <div className='flex flex-row items-center justify-center h-screen'>
+        <div className='flex flex-row items-center justify-center h-screen rotate-90'>
             {chessBoard.map((row, index)=>(
-                <div key={index}>
+                <div key={index} className=''>
                     <Row row={row}/>
                 </div>
             ))}

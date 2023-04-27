@@ -10,7 +10,7 @@ interface Cell{
 
 export default function Cell({cell}: Props) {
   return (
-    <div>
+    <div className="-rotate-90">
         {cell?.type}
     </div>
   )
