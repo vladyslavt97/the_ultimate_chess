@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <main className='overflow-hidden'>
-      <h1>Chess</h1>
+      <h1 className='flex justify-center relative top-10 text-lg font-bold'>Chess</h1>
       <Chessboard/>
     </main>
   )
