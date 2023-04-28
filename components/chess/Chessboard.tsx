@@ -7,13 +7,11 @@ import Row from './Row';
 export default function Chessboard({}: Props) {
     const chess = new Chess()
     const [chessBoard, setChessBoard] = useState(chess.board());
-    console.log(chessBoard);
-    
     return (
-        <div className='flex flex-row items-center justify-center h-screen rotate-90'>
+        <div className='flex flex-row rotate-90 items-center h-screen w-screen'>
             {chessBoard.map((row, index)=>(
                 <div key={index} className=''>
-                    <Row row={row}/>
+                    <Row row={row} indexRow={index}/>
                 </div>
             ))}
         </div>

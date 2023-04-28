@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
 
   return (
-    <main>
+    <main className='overflow-hidden'>
       <h1>Chess</h1>
       <Chessboard/>
     </main>

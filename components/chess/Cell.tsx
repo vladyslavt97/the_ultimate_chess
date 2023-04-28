@@ -1,5 +1,7 @@
+import Image from "next/image";
+
 type Props = {
-    cell: Cell | null
+    cell: Cell | null,
 }
 
 interface Cell{
@@ -11,7 +13,7 @@ interface Cell{
 export default function Cell({cell}: Props) {
   return (
     <div className="-rotate-90">
-        {cell?.type}
+        {cell ? <Image width={100} height={100} src={`/pieces/${cell?.type}${cell?.color}.png`} alt="piece"/> : ""}
     </div>
   )
 }
