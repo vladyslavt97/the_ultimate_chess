@@ -15,21 +15,43 @@ interface Cell{
 export default function Row({row, indexRow, chess}: Props) {
     const [isPieceSelected, setIsPieceSelected] = useState(false);
     const [legalMove, setLegalMove] = useState<string[]>([]);
+    const [moveFrom, setMoveFrom] = useState<string | null>();
 
-    //move from (the current position)
-    const getImagePositionFROM = (cell: Cell, event: React.MouseEvent)=>{
+    const getImagePositionFROM = async (cell: Cell, event: React.MouseEvent)=>{//its function is to set MoveFrom, if the move would be legal!
+        setIsPieceSelected(true);
         if(cell){
-            const value = cell.square;
-            // dispatch(moveFromState(value!))
-            setIsPieceSelected(true);
-            setLegalMove(chess.moves({square: event.currentTarget.getAttribute("data-col")}));
+            let theCli = event.currentTarget.getAttribute("data-col");
+            console.log('checking...123: ', isPieceSelected);
+            let legMo = await chess.moves({square: theCli})
+            setLegalMove(legMo);
+            console.log('lm: ', legMo);
+            
+            if (legMo.length > 0){
+                console.log('move more than one');
+                
+                setMoveFrom(theCli);
+                setIsPieceSelected(true);
+                console.log('checking...123: ', isPieceSelected);
+            } else {
+                console.log('in case of illegal move');
+                setIsPieceSelected(false);
+                setMoveFrom('');
+            }
         } else {
             return;
         }
     } 
 
-    //move to (the next position). Reset isPiceSelected, make a move, update redux
-    const getTheCellTOMove = (cell: Cell, event: React.MouseEvent)=>{
+    useEffect(() => {
+        console.log('isPieceSelected: ', isPieceSelected);
+    }, [isPieceSelected]);
+
+    //move to (the next position). Reset isPiceSelected, make a move, update redux. clear the move from!
+    const getTheCellTOMove = (cell: Cell, event: React.MouseEvent)=>{//its function is to submit moveFrom and moveTo and change the redux board state
+        console.log('her');
+        
+        console.log(moveFrom);
+        
         let dataa = event.currentTarget.getAttribute("data-col");
         console.log(dataa);
         setIsPieceSelected(false);
@@ -37,6 +59,8 @@ export default function Row({row, indexRow, chess}: Props) {
     }
 
     const handleClick = (cell: Cell, event: React.MouseEvent) => {
+        console.log('checking..??.: ', isPieceSelected);
+        
         if(isPieceSelected){
             console.log('to');
             getTheCellTOMove(cell, event);
@@ -46,15 +70,16 @@ export default function Row({row, indexRow, chess}: Props) {
         }
     }
 
+    
+    
+    //
     const getLetterFromIndex = (index: number): string => {
         return String.fromCharCode(72 - index).toLowerCase();
     }
 
-
-    //legal moves!!!
-
      //loop through legal moves to setAttribute
     useEffect(()=>{
+        console.log('lm3: ', legalMove);
         for (let l of legalMove){
             let matches = l.match(/\w[0-9]/);
             if (matches){
@@ -63,6 +88,7 @@ export default function Row({row, indexRow, chess}: Props) {
             } 
         }
     }, [legalMove]);
+
     //loop through legal moves to removeAttribute
     for (let l of legalMove){
         let matches = l.match(/\w[0-9]/);
@@ -76,7 +102,7 @@ export default function Row({row, indexRow, chess}: Props) {
         <div>
             {row.map((cell, indexColumn) => (
                 <div key={indexColumn} 
-                className={indexColumn % 2 === indexRow % 2 ? "w-10 h-10 bg-yellow-100" : "w-10 h-10 bg-orange-900"}
+                className={indexColumn % 2 === indexRow % 2 ? "w-12 h-12 bg-yellow-100" : "w-12 h-12 bg-orange-900"}
                 data-col={`${getLetterFromIndex(indexColumn)}${8 - indexRow}`}
                 onClick={(event) => cell && handleClick(cell, event)}
                 >
