@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import Cell from "./Cell"
+import { isPieceSelected, moveFromState, clearTheMoveFrom } from '@/redux/moveFromSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 type Props = {
     row: Array<Cell | null>,
@@ -13,73 +16,85 @@ interface Cell{
 }
 
 export default function Row({row, indexRow, chess}: Props) {
-    const [isPieceSelected, setIsPieceSelected] = useState(false);
-    const [legalMove, setLegalMove] = useState<string[]>([]);
-    const [moveFrom, setMoveFrom] = useState<string | null>();
+     const isPieceSelectedState = useSelector((state: RootState) =>state.moveFrom.valueSelected);
+    const stateMoveFrom = useSelector((state: RootState) =>state.moveFrom.value);
+    const board = useSelector((state: RootState) =>state.board.boardValue);
+    const clickedUserId = useSelector((state: RootState) => state.board.id);
 
-    const getImagePositionFROM = async (cell: Cell, event: React.MouseEvent)=>{//its function is to set MoveFrom, if the move would be legal!
-        setIsPieceSelected(true);
-        if(cell){
-            let theCli = event.currentTarget.getAttribute("data-col");
-            console.log('checking...123: ', isPieceSelected);
-            let legMo = await chess.moves({square: theCli})
-            setLegalMove(legMo);
-            console.log('lm: ', legMo);
-            
-            if (legMo.length > 0){
-                console.log('move more than one');
-                
-                setMoveFrom(theCli);
-                setIsPieceSelected(true);
-                console.log('checking...123: ', isPieceSelected);
-            } else {
-                console.log('in case of illegal move');
-                setIsPieceSelected(false);
-                setMoveFrom('');
+
+    // const thePlayersToColour = useSelector((state: RootState) => state.board.gameInserted[0]);
+    const thePlayersToColour = useSelector((state: RootState) => state.board.gameInserted[{}]);
+
+    const myId = useSelector((state: RootState) => state.board.myId);
+    const [colour, setColour] = useState<string>('');
+    
+    useEffect(()=>{
+        if(thePlayersToColour){
+            if(thePlayersToColour.player1_id === myId){
+                setColour('w');
+            }else if (thePlayersToColour.player2_id === myId){
+                setColour('b');
             }
+        }
+    }, [])
+
+    const [legalMove, setLegalMove] = useState<string[]>([]);
+    const dispatch = useDispatch();
+
+
+    const getImagePositionFROM = (cell: Cell)=>{
+        if(cell.color === colour){
+            const value = cell.square;
+            dispatch(moveFromState(value!))
+            dispatch(isPieceSelected(true))
+
+            fetch('/api/legalmoves', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({possibleMoves: value}),
+            })
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                if (data.legalmoves.length === 0){
+                    dispatch(clearTheMoveFrom(''))
+                    dispatch(isPieceSelected(false))
+                    console.log('its not your turn :(');
+                } else {
+                    setLegalMove(data.legalmoves);
+                }
+            })
+            .catch(err => {
+                console.log('er: ', err);
+            });
+
         } else {
             return;
         }
     } 
 
-    useEffect(() => {
-        console.log('isPieceSelected: ', isPieceSelected);
-    }, [isPieceSelected]);
-
-    //move to (the next position). Reset isPiceSelected, make a move, update redux. clear the move from!
-    const getTheCellTOMove = (cell: Cell, event: React.MouseEvent)=>{//its function is to submit moveFrom and moveTo and change the redux board state
-        console.log('her');
-        
-        console.log(moveFrom);
-        
+    const getTheCellTOMove = (event: React.MouseEvent, cell: object)=>{
         let dataa = event.currentTarget.getAttribute("data-col");
-        console.log(dataa);
-        setIsPieceSelected(false);
-       
+        dispatch(isPieceSelected(false));
+        // socket.emit('moveTo', {from: stateMoveFrom, to: dataa, clickedUser: clickedUserId}); 
+        //update supabase!!!
+        dispatch(clearTheMoveFrom(''));
     }
 
-    const handleClick = (cell: Cell, event: React.MouseEvent) => {
-        console.log('checking..??.: ', isPieceSelected);
-        
-        if(isPieceSelected){
-            console.log('to');
-            getTheCellTOMove(cell, event);
+    const handleClick = (cell: Cell, event: React.MouseEvent) => { 
+        if(isPieceSelectedState){
+            getTheCellTOMove(event, cell);
         } else {
-            console.log('from');
-            getImagePositionFROM(cell, event);
+            getImagePositionFROM(cell);
         }
+        
     }
 
-    
-    
-    //
-    const getLetterFromIndex = (index: number): string => {
-        return String.fromCharCode(72 - index).toLowerCase();
-    }
-
-     //loop through legal moves to setAttribute
+    //loop through legal moves to setAttribute
     useEffect(()=>{
-        console.log('lm3: ', legalMove);
         for (let l of legalMove){
             let matches = l.match(/\w[0-9]/);
             if (matches){
@@ -92,10 +107,14 @@ export default function Row({row, indexRow, chess}: Props) {
     //loop through legal moves to removeAttribute
     for (let l of legalMove){
         let matches = l.match(/\w[0-9]/);
-        if (matches && !isPieceSelected){
+        if (matches && !isPieceSelectedState){
             let dataAt = document.querySelectorAll(`[data-col=${matches[0]}]`);
             (dataAt[0] as HTMLElement).removeAttribute('id');
         } 
+    }
+
+    const getLetterFromIndex = (index: number): string => {
+        return String.fromCharCode(65 + index).toLowerCase();
     }
     
     return (
