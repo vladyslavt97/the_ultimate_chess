@@ -1,5 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { Providers } from "@/redux/provider";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,7 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gradient-to-tl from-yellow-400 via-gray-50 to-teal-300`}>{children}</body>
+        <body className={`${inter.className} bg-gradient-to-tl from-yellow-400 via-gray-50 to-teal-300`}>
+          <Providers>{children}</Providers>
+        </body>
     </html>
   )
 }

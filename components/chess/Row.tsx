@@ -18,32 +18,31 @@ interface Cell{
 export default function Row({row, indexRow, chess}: Props) {
      const isPieceSelectedState = useSelector((state: RootState) =>state.moveFrom.valueSelected);
     const stateMoveFrom = useSelector((state: RootState) =>state.moveFrom.value);
-    const board = useSelector((state: RootState) =>state.board.boardValue);
     const clickedUserId = useSelector((state: RootState) => state.board.id);
 
 
     // const thePlayersToColour = useSelector((state: RootState) => state.board.gameInserted[0]);
-    const thePlayersToColour = useSelector((state: RootState) => state.board.gameInserted[{}]);
+    // const thePlayersToColour = useSelector((state: RootState) => state.board.gameInserted[0]);
 
-    const myId = useSelector((state: RootState) => state.board.myId);
-    const [colour, setColour] = useState<string>('');
+    // const myId = useSelector((state: RootState) => state.board.myId);
+    // const [colour, setColour] = useState<string>('');
     
-    useEffect(()=>{
-        if(thePlayersToColour){
-            if(thePlayersToColour.player1_id === myId){
-                setColour('w');
-            }else if (thePlayersToColour.player2_id === myId){
-                setColour('b');
-            }
-        }
-    }, [])
+    // useEffect(()=>{
+    //     if(thePlayersToColour){
+    //         if(thePlayersToColour.player1_id === myId){
+    //             setColour('w');
+    //         }else if (thePlayersToColour.player2_id === myId){
+    //             setColour('b');
+    //         }
+    //     }
+    // }, [])
 
     const [legalMove, setLegalMove] = useState<string[]>([]);
     const dispatch = useDispatch();
 
 
     const getImagePositionFROM = (cell: Cell)=>{
-        if(cell.color === colour){
+        // if(cell.color === colour){
             const value = cell.square;
             dispatch(moveFromState(value!))
             dispatch(isPieceSelected(true))
@@ -59,27 +58,52 @@ export default function Row({row, indexRow, chess}: Props) {
                 return response.json()
             })
             .then(data => {
-                if (data.legalmoves.length === 0){
-                    dispatch(clearTheMoveFrom(''))
-                    dispatch(isPieceSelected(false))
-                    console.log('its not your turn :(');
-                } else {
-                    setLegalMove(data.legalmoves);
-                }
+                console.log('ssdsd', data);
+                
+                // if (data.legalmoves.length === 0){
+                //     dispatch(clearTheMoveFrom(''))
+                //     dispatch(isPieceSelected(false))
+                //     console.log('its not your turn :(');
+                // } else {
+                //     setLegalMove(data.legalmoves);
+                // }
             })
             .catch(err => {
                 console.log('er: ', err);
             });
 
-        } else {
-            return;
-        }
+        // } else {
+        //     return;
+        // }
     } 
 
     const getTheCellTOMove = (event: React.MouseEvent, cell: object)=>{
         let dataa = event.currentTarget.getAttribute("data-col");
         dispatch(isPieceSelected(false));
-        // socket.emit('moveTo', {from: stateMoveFrom, to: dataa, clickedUser: clickedUserId}); 
+        fetch('/api/moveto', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({from: stateMoveFrom, to: dataa, clickedUser: clickedUserId}),
+        })
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+            console.log('ssdsd', data);
+            
+            // if (data.legalmoves.length === 0){
+            //     dispatch(clearTheMoveFrom(''))
+            //     dispatch(isPieceSelected(false))
+            //     console.log('its not your turn :(');
+            // } else {
+            //     setLegalMove(data.legalmoves);
+            // }
+        })
+        .catch(err => {
+            console.log('er: ', err);
+        });
         //update supabase!!!
         dispatch(clearTheMoveFrom(''));
     }
