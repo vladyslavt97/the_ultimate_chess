@@ -22,7 +22,6 @@ export default function Row({row, indexRow, chess}: Props) {
 
 
     // const thePlayersToColour = useSelector((state: RootState) => state.board.gameInserted[0]);
-    // const thePlayersToColour = useSelector((state: RootState) => state.board.gameInserted[0]);
 
     // const myId = useSelector((state: RootState) => state.board.myId);
     // const [colour, setColour] = useState<string>('');
@@ -44,6 +43,8 @@ export default function Row({row, indexRow, chess}: Props) {
     const getImagePositionFROM = (cell: Cell)=>{
         // if(cell.color === colour){
             const value = cell.square;
+            console.log(value);
+            
             dispatch(moveFromState(value!))
             dispatch(isPieceSelected(true))
 
@@ -58,15 +59,17 @@ export default function Row({row, indexRow, chess}: Props) {
                 return response.json()
             })
             .then(data => {
-                console.log('ssdsd', data);
+                console.log('ssdsd', data.legalmoves);
                 
-                // if (data.legalmoves.length === 0){
-                //     dispatch(clearTheMoveFrom(''))
-                //     dispatch(isPieceSelected(false))
-                //     console.log('its not your turn :(');
-                // } else {
-                //     setLegalMove(data.legalmoves);
-                // }
+                //in case of illegal move
+                if (data.legalmoves.length === 0){
+                    dispatch(clearTheMoveFrom(''))
+                    dispatch(isPieceSelected(false))
+                    console.log('its not your turn :(');
+                } else {
+                    //the move is legal
+                    setLegalMove(data.legalmoves);
+                }
             })
             .catch(err => {
                 console.log('er: ', err);
