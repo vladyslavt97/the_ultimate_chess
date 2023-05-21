@@ -3,6 +3,8 @@ import Cell from "./Cell"
 import { isPieceSelected, moveFromState, clearTheMoveFrom } from '@/redux/moveFromSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { updateTheBoardState } from "@/redux/boardSlice";
+import { checkMateState } from "@/redux/checkmateSlice";
 
 type Props = {
     row: Array<Cell | null>,
@@ -10,8 +12,8 @@ type Props = {
     chess: any
 }
 interface Cell{
-    square: string;
-    type: string;
+    square: string,
+    type: string,
     color: string
 }
 
@@ -40,9 +42,9 @@ export default function Row({row, indexRow, chess}: Props) {
     const dispatch = useDispatch();
 
 
-    const getImagePositionFROM = (cell: Cell)=>{
+    const getImagePositionFROM = (cell: Cell | null)=>{
         // if(cell.color === colour){
-            const value = cell.square;
+            const value = cell?.square;
             console.log(value);
             
             dispatch(moveFromState(value!))
@@ -80,7 +82,7 @@ export default function Row({row, indexRow, chess}: Props) {
         // }
     } 
 
-    const getTheCellTOMove = (event: React.MouseEvent, cell: object)=>{
+    const getTheCellTOMove = (event: React.MouseEvent)=>{
         let dataa = event.currentTarget.getAttribute("data-col");
         dispatch(isPieceSelected(false));
         fetch('/api/moveto', {
@@ -91,29 +93,33 @@ export default function Row({row, indexRow, chess}: Props) {
             body: JSON.stringify({from: stateMoveFrom, to: dataa, clickedUser: clickedUserId}),
         })
         .then(response => {
-            return response.json()
+            if(response.status === 200){
+                // console.log("SUCCESSS")
+                return response.json();     
+            }else {
+                console.log("SOMETHING WENT WRONG")
+            }
         })
         .then(data => {
-            console.log('ssdsd', data);
+            // console.log('data gameover: ', data.gameover);//true
+            // dispatch(checkMateState(data.gameover))
+            // console.log('data.moved: ', data.moved);
             
-            // if (data.legalmoves.length === 0){
-            //     dispatch(clearTheMoveFrom(''))
-            //     dispatch(isPieceSelected(false))
-            //     console.log('its not your turn :(');
-            // } else {
-            //     setLegalMove(data.legalmoves);
-            // }
+            dispatch(updateTheBoardState(data.board))
+        })
+        .then(()=>{
+            dispatch(clearTheMoveFrom(''))
         })
         .catch(err => {
-            console.log('er: ', err);
-        });
-        //update supabase!!!
-        dispatch(clearTheMoveFrom(''));
+                console.log('error unfortunately: ', err);
+            });
     }
 
-    const handleClick = (cell: Cell, event: React.MouseEvent) => { 
+    const handleClick = (cell: Cell | null,  event: React.MouseEvent) => { 
+        console.log('uspda');
+        
         if(isPieceSelectedState){
-            getTheCellTOMove(event, cell);
+            getTheCellTOMove(event);
         } else {
             getImagePositionFROM(cell);
         }
@@ -147,10 +153,10 @@ export default function Row({row, indexRow, chess}: Props) {
     return (
         <div>
             {row.map((cell, indexColumn) => (
-                <div key={indexColumn} 
+               <div key={indexColumn} 
                 className={indexColumn % 2 === indexRow % 2 ? "w-12 h-12 bg-yellow-100" : "w-12 h-12 bg-orange-900"}
                 data-col={`${getLetterFromIndex(indexColumn)}${8 - indexRow}`}
-                onClick={(event) => cell && handleClick(cell, event)}
+                onClick={(event) => handleClick(cell, event)}
                 >
                     <Cell cell={cell}/>
                 </div>
