@@ -3,7 +3,7 @@ type Props = {}
 import chess from '@/lib/chess';
 import { useEffect, useState } from 'react';
 import Row from './Row';
-import supabase from "@/lib/supabase";
+// import supabase from "@/lib/supabase";
 
 type ChessBoard = {
   id: string;
@@ -13,7 +13,7 @@ type ChessBoard = {
   gamestate: string
 };
 
-export default async function Chessboard({}: Props) {
+export default function Chessboard({}: Props) {
     //query to db to insert the board and start the game
     const [chessBoard, setChessBoard] = useState(chess.board());
     

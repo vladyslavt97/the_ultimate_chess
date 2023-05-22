@@ -151,7 +151,7 @@ export default function Row({row, indexRow, chess}: Props) {
     }
     
     return (
-        <div>
+        <div className="flex flex-col-reverse">
             {row.map((cell, indexColumn) => (
                <div key={indexColumn} 
                 className={indexColumn % 2 === indexRow % 2 ? "w-12 h-12 bg-yellow-100" : "w-12 h-12 bg-orange-900"}
