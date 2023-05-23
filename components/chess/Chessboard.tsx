@@ -3,7 +3,9 @@ type Props = {}
 import chess from '@/lib/chess';
 import { useEffect, useState } from 'react';
 import Row from './Row';
-// import supabase from "@/lib/supabase";
+import supabase from "@/lib/supabase";
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 type ChessBoard = {
   id: string;
@@ -14,37 +16,46 @@ type ChessBoard = {
 };
 
 export default function Chessboard({}: Props) {
-    //query to db to insert the board and start the game
-    const [chessBoard, setChessBoard] = useState(chess.board());
-    
-    
-//     useEffect(()=>{
-//     const channel = supabase.channel('realtime chess').on('postgres_changes',
-//       {
-//         event: "*", schema: "public", table: "chess"
-//       }, (payload) => {
-//         console.log({payload});
-//         // setChat([...chat, payload.new as Message])
-//         if(payload.eventType === "INSERT"){
-//             console.log('payload: ', payload);
-            
-//         // setChessBoard([payload.new as ChessBoard, ...chessBoard])
-//         } else {
-//         //   console.log('chat', chat);
-          
-//         //   const filtered = chessBoard.filter(el => {
-//         //     return el.id !== payload.old.id
-//         //   })
-//         //   console.log('filtered', filtered);
-          
-//         //   setChessBoard(filtered)
-//         }
-//       }).subscribe()
+    //query to db to extract the board for certain two players and start the game
+    const chessBoard2 = useSelector((state: RootState) => state.board.boardValue);
 
-//       return () => {
-//         supabase.removeChannel(channel)
-//       }
-//   },[chessBoard, setChessBoard])
+    const [chessBoard, setChessBoard] = useState(chess.board());
+    useEffect(()=>{
+        console.log(chessBoard);
+        console.log(chessBoard2);
+        
+        // setChessBoard(chessBoard2);
+    },[chessBoard2])
+
+    
+    useEffect(() => {
+        console.log('trying to get there');
+        
+        const channel = supabase.channel('realtime chess').on('postgres_changes', {
+            event: "*", schema: "public", table: "game"
+        }, (payload) => {
+            console.log({ payload });
+
+            if (payload.eventType === "INSERT") {
+                console.log('insertion');
+                
+            // setChessBoard([payload.new as ChessBoard]);
+            } else {
+                console.log('something else');
+                
+            // setChessBoard((prevChessBoard) => {
+            //     const filtered = prevChessBoard.filter((el) => el !== payload.old.id);
+            //     return filtered;
+            // });
+            }
+        }).subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, []);
+
+
     
     return (
         <div className='flex flex-row rotate-90 items-center h-screen w-screen sm:justify-center'>
