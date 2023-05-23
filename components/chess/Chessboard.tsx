@@ -21,8 +21,6 @@ export default function Chessboard({}: Props) {
 
     const [chessBoard, setChessBoard] = useState(chess.board());
     useEffect(()=>{
-        console.log(chessBoard);
-        console.log(chessBoard2);
         
         // setChessBoard(chessBoard2);
     },[chessBoard2])
