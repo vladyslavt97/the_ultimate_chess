@@ -28,7 +28,7 @@ export default function Home() {
     
     return responseData;
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Errorrrr:', error);
     throw error;
   }
   }

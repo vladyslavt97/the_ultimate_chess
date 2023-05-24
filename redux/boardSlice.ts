@@ -30,7 +30,6 @@ export const boardSlice = createSlice({
     },
     updateTheBoardState: (state, boardAction: PayloadAction<Array<Array<object>>>) => {
         state.boardValue = boardAction.payload;
-        console.log('hm', state.boardValue);
         
     },
     selectedUserId: (state, userAction: PayloadAction<number>) => {

@@ -4,8 +4,15 @@ import chess from '@/lib/chess';
 import { useEffect, useState } from 'react';
 import Row from './Row';
 import supabase from "@/lib/supabase";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { updateTheBoardState } from '@/redux/boardSlice';
+
+interface Cell{
+    square: string,
+    type: string,
+    color: string
+}
 
 type ChessBoard = {
   id: string;
@@ -17,13 +24,23 @@ type ChessBoard = {
 
 export default function Chessboard({}: Props) {
     //query to db to extract the board for certain two players and start the game
-    const chessBoard2 = useSelector((state: RootState) => state.board.boardValue);
+    const chessBoard = useSelector((state: RootState) => state.board.boardValue);
 
-    const [chessBoard, setChessBoard] = useState(chess.board());
+    const dispatch = useDispatch();
+    // const [chessBoard, setChessBoard] = useState(chess.board());
     useEffect(()=>{
-        
-        // setChessBoard(chessBoard2);
-    },[chessBoard2])
+        fetch('/api/gamestate')
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                console.log('ssdsd get', data.board);
+                dispatch(updateTheBoardState(data.board))
+            })
+            .catch(err => {
+                console.log('er: ', err);
+            });
+    },[])
 
     
     useEffect(() => {
@@ -57,7 +74,7 @@ export default function Chessboard({}: Props) {
     
     return (
         <div className='flex flex-row rotate-90 items-center h-screen w-screen sm:justify-center'>
-            {chessBoard.map((row, index)=>(
+            {(chessBoard as (Cell | null)[][]).map((row, index) => (
                 <div key={index} className=''>
                     <Row row={row} indexRow={index} chess={chess}/>
                 </div>
