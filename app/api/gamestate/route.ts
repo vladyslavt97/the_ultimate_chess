@@ -6,10 +6,10 @@ export async function GET(request: Request) {
   .eq('player1', 5)   // Replace 'value1' with the desired value for player1
   .eq('player2', 17)   // Replace 'value2' with the desired value for player2
   .limit(1);
-    console.log('sd', data);
+    // console.log('sd', data);
   if (data){
     chess.load(data[0].gamestate)
-    console.log('checking: ', await chess.board());
+    // console.log('checking: ', await chess.board());
     return new Response(JSON.stringify({board: chess.board()}));
   }
 }

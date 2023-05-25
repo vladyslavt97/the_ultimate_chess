@@ -24,11 +24,11 @@ export default function Home() {
     }
 
     const responseData = await response.json();
-    console.log('responseData, ',responseData);
+    // console.log('responseData, ',responseData);
     
     return responseData;
   } catch (error) {
-    console.error('Errorrrr:', error);
+    // console.error('Errorrrr:', error);
     throw error;
   }
   }

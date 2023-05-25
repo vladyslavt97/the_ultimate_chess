@@ -34,7 +34,7 @@ export default function Chessboard({}: Props) {
                 return response.json()
             })
             .then(data => {
-                console.log('ssdsd get', data.board);
+                console.log('get data /gamestate', data.board);
                 dispatch(updateTheBoardState(data.board))
             })
             .catch(err => {

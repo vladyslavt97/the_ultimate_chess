@@ -45,8 +45,6 @@ export default function Row({row, indexRow, chess}: Props) {
     const getImagePositionFROM = (cell: Cell | null)=>{
         // if(cell.color === colour){
             const value = cell?.square;
-            console.log(value);
-            
             dispatch(moveFromState(value!))
             dispatch(isPieceSelected(true))
 
@@ -61,7 +59,7 @@ export default function Row({row, indexRow, chess}: Props) {
                 return response.json()
             })
             .then(data => {
-                console.log('ssdsd', data.legalmoves);
+                console.log('legalmoves', data.legalmoves);
                 
                 //in case of illegal move
                 if (data.legalmoves.length === 0){
@@ -84,6 +82,9 @@ export default function Row({row, indexRow, chess}: Props) {
 
     const getTheCellTOMove = (event: React.MouseEvent)=>{
         let dataa = event.currentTarget.getAttribute("data-col");
+
+        console.log(stateMoveFrom, dataa, "uuuuu");
+        
         dispatch(isPieceSelected(false));
         fetch('/api/moveto', {
             method: 'POST',
@@ -104,7 +105,7 @@ export default function Row({row, indexRow, chess}: Props) {
             // console.log('data gameover: ', data.gameover);//true
             // dispatch(checkMateState(data.gameover))
             // console.log('data.moved: ', data.moved);
-            console.log('importnat: ', data);
+            console.log('/moveto data: ', data);
             
             dispatch(updateTheBoardState(data.board))
         })
@@ -117,7 +118,6 @@ export default function Row({row, indexRow, chess}: Props) {
     }
 
     const handleClick = (cell: Cell | null,  event: React.MouseEvent) => { 
-        console.log('uspda');
         
         if(isPieceSelectedState){
             getTheCellTOMove(event);
