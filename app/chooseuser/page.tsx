@@ -1,42 +1,31 @@
 "use client"
-import Link from 'next/link';
+import ChooseUserButton from '@/components/ChooseUserButton';
+import { useEffect, useState } from 'react';
 
 type Props = {}
 
 export default function Page({}: Props) {
+  const [users, setUSers] = useState([]);
   
-    let player1ID = 5;
-  let player2ID = 16;
+  useEffect(()=>{
+    fetch('/api/getallusers')
+      .then(response => {
+          return response.json()
+      })
+      .then(data => {
+          console.log('getallusers', data.users);
+          setUSers(data.users)
+      })
+      .catch(err => {
+          console.log('er: ', err);
+      });
+  },[])
+
   
-  const startTheGame = async () =>{
-    try {
-    const response = await fetch("/api/startgame", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({player1: player1ID, player2: player2ID}),
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const responseData = await response.json();
-    // console.log('responseData, ',responseData);
-    
-    return responseData;
-  } catch (error) {
-    console.error('Errorrrr:', error);
-    throw error;
-  }
-  }
 
   return (
     <main className='overflow-hidden min-h-screen'>
-      <Link href="/chessboard" 
-      onClick={startTheGame}
-      >Click here to start the game!</Link>
+      <ChooseUserButton users={users}/>
     </main>
   )
 }
