@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 type Props = {
@@ -10,17 +11,19 @@ interface Username {
 }
 
 export default function ChooseUserButton({ users }: Props) {
-  let player1ID = 5;
-  let player2ID = 16;
 
-  const startTheGame = async () => {
+  //add session to get myId
+  // const { data: session, status } = useSession()
+  // console.log('session', session);
+  
+  const startTheGame = async (userId: number) => {
     try {
       const response = await fetch("/api/startgame", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ player1: player1ID, player2: player2ID }),
+        body: JSON.stringify({ player1: 5, player2: userId }),
       });
 
       if (!response.ok) {
@@ -41,7 +44,7 @@ export default function ChooseUserButton({ users }: Props) {
         <>
         {users.map(user => (
           <div key={user.id} className='px-3 py-0 bg-green-500 rounded-lg min-w-[20%] text-center'>
-            <Link href="/chessboard" onClick={startTheGame}>
+            <Link href="/chessboard" onClick={e=>startTheGame(user.id)}>
               {user.username}
             </Link>
           </div>
