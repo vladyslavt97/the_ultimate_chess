@@ -1,8 +1,5 @@
 "use client"
 import Chessboard from "@/components/chess/Chessboard"
-import chess from '@/lib/chess';
-import { useEffect, useState } from 'react';
-import supabase from "@/lib/supabase";
 
 type Props = {}
 

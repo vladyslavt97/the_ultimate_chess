@@ -1,43 +1,42 @@
 "use client"
-
-import { Inter } from 'next/font/google'
 import Link from 'next/link';
 
-const inter = Inter({ subsets: ['latin'] })
+import { signIn, useSession} from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  let player1ID = 5;
-  let player2ID = 16;
-  
-  const startTheGame = async () =>{
-    try {
-    const response = await fetch("/api/startgame", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({player1: player1ID, player2: player2ID}),
-    });
+  const { data: session, status } = useSession()
+    const Router = useRouter();
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+    if (status === "loading") {
+        return <p className="flex justify-center items-center h-screen w-full text-4xl">Loading...</p>
     }
 
-    const responseData = await response.json();
-    // console.log('responseData, ',responseData);
-    
-    return responseData;
-  } catch (error) {
-    // console.error('Errorrrr:', error);
-    throw error;
-  }
-  }
-
+    if (status === "authenticated") {
+        Router.push("/upcoming")
+    }
   return (
-    <main className='overflow-hidden min-h-screen'>
-      <Link href="/chessboard" 
-      onClick={startTheGame}
-      >Click here to start the game!</Link>
-    </main>
+    <>
+      <main className="flex flex-col justify-center items-center w-full h-screen bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-green-300 via-blue-300 to-purple-200">
+      {status === "unauthenticated" ? <div className="flex gap-10 justify-around flex-col items-center text-center">
+          <h1 className=" text-black text-2xl font-serif">Welcome to Chess</h1>
+          <button className=" bg-green-300 border-gray-500 border text-4xl py-2 px-4 rounded-full"
+            onClick={() => {
+              signIn();
+            }}
+          >
+            Login
+          </button>
+          <Link href="/register" className=" bg-green-300 border-gray-500 border text-4xl py-2 px-4 rounded-full"
+
+          >
+            Register
+          </Link>
+        </div>
+        :
+        <p className="flex justify-center items-center h-screen w-full text-4xl">Loading...</p> 
+        }
+      </main>
+    </>
   )
 }

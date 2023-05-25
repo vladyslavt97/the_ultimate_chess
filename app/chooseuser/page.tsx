@@ -1,17 +1,42 @@
 "use client"
-import Chessboard from "@/components/chess/Chessboard"
-import chess from '@/lib/chess';
-import { useEffect, useState } from 'react';
-import supabase from "@/lib/supabase";
+import Link from 'next/link';
 
 type Props = {}
 
 export default function Page({}: Props) {
   
+    let player1ID = 5;
+  let player2ID = 16;
+  
+  const startTheGame = async () =>{
+    try {
+    const response = await fetch("/api/startgame", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({player1: player1ID, player2: player2ID}),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const responseData = await response.json();
+    // console.log('responseData, ',responseData);
+    
+    return responseData;
+  } catch (error) {
+    console.error('Errorrrr:', error);
+    throw error;
+  }
+  }
+
   return (
-    <div className=" overflow-x-hidden">
-      <h1 className='flex justify-center relative top-10 text-lg font-bold'>Chess</h1>
-      <Chessboard/>
-    </div>
+    <main className='overflow-hidden min-h-screen'>
+      <Link href="/chessboard" 
+      onClick={startTheGame}
+      >Click here to start the game!</Link>
+    </main>
   )
 }
