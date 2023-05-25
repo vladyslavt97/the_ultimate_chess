@@ -10,6 +10,11 @@ export async function POST(request: Request) {
   .update({ gamestate: chess.fen() })
   .eq('player1', 5)
   .eq('player2', 17);
+
+  const gameisover = chess.isGameOver();
+  if(gameisover){
+    return new Response(JSON.stringify({ gameOver: true }));
+  }
   let board = chess.board();
   return new Response(JSON.stringify({ board }));
 }

@@ -102,9 +102,10 @@ export default function Row({row, indexRow, chess}: Props) {
             }
         })
         .then(data => {
-            // console.log('data gameover: ', data.gameover);//true
-            // dispatch(checkMateState(data.gameover))
-            // console.log('data.moved: ', data.moved);
+            if(data.gameOver){
+                console.log('data gameover: ', data.gameOver);//true
+                dispatch(checkMateState(data.gameOver))
+            }
             console.log('/moveto data: ', data);
             
             dispatch(updateTheBoardState(data.board))
