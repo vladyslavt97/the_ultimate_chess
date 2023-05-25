@@ -1,10 +1,10 @@
-Changes happening in supabase
-redux updated.
+1. Create auth: username and pw
+2. save data in db
 
-now:
-need to have architecture for the board:
-1. after the game is started and board inserted, we display an empty board.
-(maybe initial value is chess.board())
+3. create a friends list on the / page.
+(should be all users)
 
-2. then, we listen to the changes in the db!
-3. after the change is received, we update redux
+4. insert the game with the id of the clicked user in db
+5. listen to the changes in the chessboard component with subscribe and update redux.
+
+Done!
