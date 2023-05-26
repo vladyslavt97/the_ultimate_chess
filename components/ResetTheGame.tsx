@@ -1,14 +1,22 @@
-import { clearTheBoard } from '@/redux/checkmateSlice';
 import React from 'react'
 import { useDispatch } from 'react-redux';
-
+import chess from '@/lib/chess';
+import { updateTheBoardState } from '@/redux/boardSlice';
 type Props = {}
+
+interface Cell{
+    square: string,
+    type: string,
+    color: string
+}
 
 export default function ResetTheGame({}: Props) {
 
     const dispatch = useDispatch();
     
     const resetGame = async () => {
+      console.log('finty firty');
+      
     try {
       const response = await fetch("/api/reset-the-game", {
         method: 'POST',
@@ -23,7 +31,11 @@ export default function ResetTheGame({}: Props) {
       }
 
       const responseData = await response.json();
-      dispatch(clearTheBoard(true));
+      console.log('chess', chess.fen());
+      
+      let board: any = chess.board();
+      dispatch(updateTheBoardState(board));
+
       return responseData;
     } catch (error) {
       console.error('Error:', error);
@@ -32,6 +44,6 @@ export default function ResetTheGame({}: Props) {
   };
 
   return (
-    <button onClick={resetGame} className=' cursor-pointer bg-red-300 p-2 w-20 rounded-full'>Reset</button>
+    <button onClick={resetGame} className=' cursor-pointer bg-red-300 p-2 w-20 rounded-full z-10'>Reset</button>
   )
 }

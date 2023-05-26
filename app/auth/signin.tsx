@@ -17,7 +17,7 @@ const SignIn: NextPage = (props): JSX.Element => {
     }
 
     if (status === "authenticated") {
-        Router.push("/upcoming")
+        Router.push("/chooseuser")
     }
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     // validate your userinfo

@@ -25,7 +25,8 @@ type ChessBoard = {
 export default function Chessboard({}: Props) {
     //query to db to extract the board for certain two players and start the game
     const chessBoard = useSelector((state: RootState) => state.board.boardValue);
-
+    console.log('chessBoardchessBoardchessBoard, ', chessBoard);
+    
     const dispatch = useDispatch();
     // const [chessBoard, setChessBoard] = useState(chess.board());
     useEffect(()=>{

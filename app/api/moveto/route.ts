@@ -13,7 +13,8 @@ export async function POST(request: Request) {
 
   const gameisover = chess.isGameOver();
   if(gameisover){
-    return new Response(JSON.stringify({ gameOver: true }));
+    let board = chess.board();
+    return new Response(JSON.stringify({ gameOver: true, board }));
   }
   let board = chess.board();
   return new Response(JSON.stringify({ board }));

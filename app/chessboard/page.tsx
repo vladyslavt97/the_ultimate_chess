@@ -7,9 +7,9 @@ type Props = {}
 export default function Page({}: Props) {
   
   return (
-    <div className=" overflow-x-hidden">
-      <div className="flex justify-center relative top-10 gap-10">
-        <h1 className=' text-lg font-bold'>Chess</h1>
+    <div className="overflow-hidden">
+      <div className="flex justify-center gap-10 mt-10 -mb-10">
+        <h1 className=''>Chess</h1>
         <ResetTheGame/>
       </div>
       <Chessboard/>
