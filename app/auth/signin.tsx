@@ -40,8 +40,8 @@ const SignIn: NextPage = (props): JSX.Element => {
           onChange={({ target }) =>
             setUserInfo({ ...userInfo, email: target.value })
           }
-          type="email"
-          placeholder="Email"
+          type="text"
+          placeholder="Username"
           className="rounded w-72 text-xl bg-white text-black"
         />
         <input

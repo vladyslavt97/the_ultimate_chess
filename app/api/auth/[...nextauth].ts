@@ -1,5 +1,12 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import supabase from "@/lib/supabase";
+
+interface User {
+  id: string,
+  username: string;
+  role: string;
+}
 
 const authOptions: NextAuthOptions = {
   session: {
@@ -9,46 +16,46 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       type: "credentials",
       credentials: {},
-      authorize(credentials, req) {
-        const { email, password } = credentials as {
-          email: string;
+      authorize: async (credentials, req) => {
+        const { username, password } = credentials as {
+          id: string;
+          username: string;
           password: string;
         };
-        // perform you login logic
-        // find out user from db
-        
-        if ((email === process.env.MY_EMAIL && password === process.env.MY_PWD) || 
-        (email === process.env.MR_EMAIL && password === process.env.MR_PWD)
-        ) {
-          // if everything is fine
-          return {
-            id: "1234",
-            name: "VT or MR",
-            email: email,
-            role: "admin",
-          };
-        }
-        // throw new Error("invalid credentials");
-        return null;
 
+        try {
+          const { data, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("username", username)
+            .eq("password", password)
+            .single();
+
+          if (error) {
+            console.error("Error searching for user:", error);
+            return null;
+          }
+
+          if (data) {
+            // If the user is found
+            return {
+              id: "12",
+              username: data.username,
+              role: "admin",
+            } as User;
+          }
+        } catch (error) {
+          console.error("Error searching for user:", error);
+          return null;
+        }
+
+        return null;
       },
     }),
   ],
   pages: {
     signIn: "/auth/signin",
-    // error: '/auth/error',
-    // signOut: '/auth/signout'
   },
-  // callbacks: {
-  //   jwt(params) {
-  //     // update token
-  //     if (params.user?.role) {
-  //       params.token.role = params.user.role;
-  //     }
-  //     // return final_token
-  //     return params.token;
-  //   },
-  // },
 };
 
 export default NextAuth(authOptions);
