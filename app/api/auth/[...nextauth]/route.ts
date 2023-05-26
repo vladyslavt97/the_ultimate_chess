@@ -22,7 +22,8 @@ const authOptions: NextAuthOptions = {
           username: string;
           password: string;
         };
-
+        console.log('heelo fro auth');
+        
         try {
           const { data, error } = await supabase
             .from("users")
@@ -55,7 +56,19 @@ const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/auth/signin",
+    // error: '/auth/error',
+    // signOut: '/auth/signout'
   },
+  // callbacks: {
+  //   jwt(params) {
+  //     // update token
+  //     if (params.user?.role) {
+  //       params.token.role = params.user.role;
+  //     }
+  //     // return final_token
+  //     return params.token;
+  //   },
+  // },
 };
 
 export default NextAuth(authOptions);

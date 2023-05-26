@@ -13,8 +13,9 @@ export default function Home() {
     }
 
     if (status === "authenticated") {
-        Router.push("/upcoming")
+        Router.push("/chooseuser")
     }
+    
   return (
     <>
       <main className="flex flex-col justify-center items-center w-full h-screen bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-green-300 via-blue-300 to-purple-200">
@@ -28,7 +29,6 @@ export default function Home() {
             Login
           </button>
           <Link href="/register" className=" bg-green-300 border-gray-500 border text-4xl py-2 px-4 rounded-full"
-
           >
             Register
           </Link>

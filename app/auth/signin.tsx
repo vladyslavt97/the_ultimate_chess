@@ -7,7 +7,7 @@ interface Props {}
 
 const SignIn: NextPage = (props): JSX.Element => {
   const [error, setError] = useState(false);
-  const [userInfo, setUserInfo] = useState({ email: "", password: "" });
+  const [userInfo, setUserInfo] = useState({ username: "", password: "" });
     const { data: session, status } = useSession()
     console.log("status", status);
     
@@ -19,11 +19,13 @@ const SignIn: NextPage = (props): JSX.Element => {
     if (status === "authenticated") {
         Router.push("/chooseuser")
     }
+
+    
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     // validate your userinfo
     e.preventDefault();
     const res = await signIn("credentials", {
-      email: userInfo.email,
+      username: userInfo.username,
       password: userInfo.password,
       redirect: false,
     });
@@ -36,9 +38,9 @@ const SignIn: NextPage = (props): JSX.Element => {
       {error && <h1 className="absolute top-52 text-red-600 flex justify-center items-center w-full">Invalid Credentials</h1>}
       <form onSubmit={handleSubmit} className="flex justify-center items-center flex-col h-screen gap-3 bg-blue-200">
         <input
-          value={userInfo.email}
+          value={userInfo.username}
           onChange={({ target }) =>
-            setUserInfo({ ...userInfo, email: target.value })
+            setUserInfo({ ...userInfo, username: target.value })
           }
           type="text"
           placeholder="Username"
