@@ -8,3 +8,8 @@
 5. listen to the changes in the chessboard component with subscribe and update redux.
 
 Done!
+
+
+//
+the page is not found. The path is weird
+https://codevoweb.com/setup-and-use-nextauth-in-nextjs-13-app-directory/

@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { data: session, status } = useSession()
+  console.log("session: ", session);
+  
     const Router = useRouter();
 
     if (status === "loading") {
@@ -15,7 +17,7 @@ export default function Home() {
     if (status === "authenticated") {
         Router.push("/chooseuser")
     }
-    
+
   return (
     <>
       <main className="flex flex-col justify-center items-center w-full h-screen bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-green-300 via-blue-300 to-purple-200">
