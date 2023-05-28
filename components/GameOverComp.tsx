@@ -30,7 +30,7 @@ export default function GameOverComp() {
       
       let board: any = chess.board();
       dispatch(updateTheBoardState(board));
-      dispatch(checkMateState(false))
+      dispatch(checkMateState(false ))
       return responseData;
     } catch (error) {
       console.error('Error:', error);
