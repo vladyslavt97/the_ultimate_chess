@@ -1,4 +1,4 @@
-first: follow the steps from next auth docs for seting up auth and session
+first: follow the steps from next auth docs for seting up auth and session+
 
 1. Create auth: username and pw
 2. save data in db
