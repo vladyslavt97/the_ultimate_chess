@@ -13,20 +13,20 @@ export default function Page({}: Props) {
   const chessBoard = useSelector((state: RootState) => state.board.boardValue);
   
   
-  chess.load("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-  //attempt two
+  // chess.load("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+  // //attempt two
   
-  console.log("seond important", isGameover);
-  let someVal;
-  for (let i = 0; i <= chess.board().length; i++){
-    for (let y = 0; y <= chess.board().length; y++){
-        if (i !== y){
-          someVal = false;
-        return;
-      }
-    }
-  }
-  console.log('someVal,', someVal);
+  // console.log("seond important", isGameover);
+  // let someVal;
+  // for (let i = 0; i <= chess.board().length; i++){
+  //   for (let y = 0; y <= chess.board().length; y++){
+  //       if (i !== y){
+  //         someVal = false;
+  //       return;
+  //     }
+  //   }
+  // }
+  // console.log('someVal,', someVal);
   
   return (
     <div className="overflow-hidden">
@@ -35,7 +35,7 @@ export default function Page({}: Props) {
         <ResetTheGame/>
       </div>
       <Chessboard/>
-      {(isGameover && chessBoard !== chess.board()) && 
+      {(isGameover) && 
         <div id='checkmate'>
             <GameOverComp />
       </div>}
