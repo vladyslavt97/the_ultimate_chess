@@ -10,8 +10,6 @@ export default function GameOverComp() {
 
     //fetch post to clean the data and start again
     const resetGame = async () => {
-      console.log('finty firty');
-      
     try {
       const response = await fetch("/api/reset-the-game", {
         method: 'POST',
@@ -26,8 +24,6 @@ export default function GameOverComp() {
       }
 
       const responseData = await response.json();
-      console.log('chess', chess.fen());
-      
       chess.load("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
       let board: any = chess.board()      
       dispatch(updateTheBoardState(board));

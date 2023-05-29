@@ -18,7 +18,7 @@ interface Cell{
 }
 
 export default function Row({row, indexRow, chess}: Props) {
-     const isPieceSelectedState = useSelector((state: RootState) =>state.moveFrom.valueSelected);
+    const isPieceSelectedState = useSelector((state: RootState) =>state.moveFrom.valueSelected);
     const stateMoveFrom = useSelector((state: RootState) =>state.moveFrom.value);
     const clickedUserId = useSelector((state: RootState) => state.board.id);
 
@@ -59,8 +59,6 @@ export default function Row({row, indexRow, chess}: Props) {
                 return response.json()
             })
             .then(data => {
-                console.log('legalmoves', data.legalmoves);
-                
                 //in case of illegal move
                 if (data.legalmoves.length === 0){
                     dispatch(clearTheMoveFrom(''))
@@ -83,8 +81,6 @@ export default function Row({row, indexRow, chess}: Props) {
     const getTheCellTOMove = (event: React.MouseEvent)=>{
         let dataa = event.currentTarget.getAttribute("data-col");
 
-        console.log(stateMoveFrom, dataa, "uuuuu");
-        
         dispatch(isPieceSelected(false));
         fetch('/api/moveto', {
             method: 'POST',
@@ -103,12 +99,9 @@ export default function Row({row, indexRow, chess}: Props) {
         })
         .then(data => {
             if(data.gameOver){
-                console.log('data gameover: ', data.gameOver);//true
                 dispatch(updateTheBoardState(data.board))
                 dispatch(checkMateState(data.gameOver))
             }
-            console.log('/moveto data: ', data);
-            
             dispatch(updateTheBoardState(data.board))
         })
         .then(()=>{
@@ -157,7 +150,7 @@ export default function Row({row, indexRow, chess}: Props) {
         <div className="flex flex-col-reverse">
             {row.map((cell, indexColumn) => (
                <div key={indexColumn} 
-                className={indexColumn % 2 === indexRow % 2 ? "w-12 h-12 bg-yellow-100" : "w-12 h-12 bg-orange-900"}
+                className={indexColumn % 2 === indexRow % 2 ? "w-11 h-11 bg-yellow-100" : "w-11 h-11 bg-orange-900"}
                 data-col={`${getLetterFromIndex(indexColumn)}${8 - indexRow}`}
                 onClick={(event) => handleClick(cell, event)}
                 >
