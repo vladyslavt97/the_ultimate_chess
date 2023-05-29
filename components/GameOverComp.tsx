@@ -28,7 +28,8 @@ export default function GameOverComp() {
       const responseData = await response.json();
       console.log('chess', chess.fen());
       
-      let board: any = chess.board();
+      chess.load("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+      let board: any = chess.board()      
       dispatch(updateTheBoardState(board));
       dispatch(checkMateState(false ))
       return responseData;

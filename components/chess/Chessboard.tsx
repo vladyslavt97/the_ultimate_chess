@@ -7,6 +7,7 @@ import supabase from "@/lib/supabase";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { updateTheBoardState } from '@/redux/boardSlice';
+import { checkMateState } from '@/redux/checkmateSlice';
 
 interface Cell{
     square: string,
@@ -43,43 +44,51 @@ export default function Chessboard({}: Props) {
             });
     },[])
 
-    
     useEffect(() => {
         console.log('trying to get there');
         
         const channel = supabase.channel('realtime chess').on('postgres_changes', {
             event: "*", schema: "public", table: "game"
         }, (payload) => {
-            console.log({ payload });
+            console.log("asdasdad wichtig", payload );
+            // chess.load(payload.new.gamestate)
+            // console.log('+++', chess.board());
+            if ('gamestate' in payload.new) {
+                chess.load(payload.new.gamestate);
+                console.log('+++', chess.board());
+                const theone: any = chess.board()
+                console.log('64', theone);
 
-            if (payload.eventType === "INSERT") {
-                console.log('insertion');
-                
-            // setChessBoard([payload.new as ChessBoard]);
-            } else {
-                console.log('something else');
-                
-            // setChessBoard((prevChessBoard) => {
-            //     const filtered = prevChessBoard.filter((el) => el !== payload.old.id);
-            //     return filtered;
-            // });
+
+                //check for gameover
+                if(chess.isGameOver()){
+                    dispatch(updateTheBoardState(theone))
+                    dispatch(checkMateState(true))
+                }
+
+                dispatch(updateTheBoardState(theone))
             }
+            
         }).subscribe();
 
         return () => {
             supabase.removeChannel(channel);
         };
-    }, []);
+    }, [chessBoard]);
 
 
     
     return (
         <div className='flex flex-row rotate-90 items-center h-screen w-screen sm:justify-center'>
-            {(chessBoard as (Cell | null)[][]).map((row, index) => (
-                <div key={index} className=''>
-                    <Row row={row} indexRow={index} chess={chess}/>
-                </div>
-            ))}
+            {chessBoard.length !== 0 ? 
+                <>
+                    {(chessBoard as (Cell | null)[][]).map((row, index) => (
+                        <div key={index} className=''>
+                            <Row row={row} indexRow={index} chess={chess}/>
+                        </div>
+                    ))} 
+                </>
+            : <h1 className='flex justify-center items-center -rotate-90 text-2xl z-50 text-green-600'>Loading chessboard ♟️</h1>}
         </div>
 
     )
