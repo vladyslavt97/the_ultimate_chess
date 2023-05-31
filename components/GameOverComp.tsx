@@ -27,7 +27,7 @@ export default function GameOverComp() {
       chess.load("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
       let board: any = chess.board()      
       dispatch(updateTheBoardState(board));
-      dispatch(checkMateState(false ))
+      dispatch(checkMateState(false))
       return responseData;
     } catch (error) {
       console.error('Error:', error);

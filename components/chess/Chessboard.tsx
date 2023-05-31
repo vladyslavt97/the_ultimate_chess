@@ -47,12 +47,13 @@ export default function Chessboard({}: Props) {
             if ('gamestate' in payload.new) {
                 chess.load(payload.new.gamestate);
                 const theone: any = chess.board()
-
+                dispatch(updateTheBoardState(theone))
+                if(chess.fen() === "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"){
+                    dispatch(checkMateState(false))
+                }
                 if(chess.isGameOver()){
-                    dispatch(updateTheBoardState(theone))
                     dispatch(checkMateState(true))
                 }
-                dispatch(updateTheBoardState(theone))
             }
         }).subscribe();
 
