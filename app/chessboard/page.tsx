@@ -2,7 +2,6 @@
 import GameOverComp from "@/components/GameOverComp";
 import ResetTheGame from "@/components/ResetTheGame"
 import Chessboard from "@/components/chess/Chessboard"
-import chess from "@/lib/chess";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 
@@ -10,7 +9,6 @@ type Props = {}
 
 export default function Page({}: Props) {
   const isGameover = useSelector((state: RootState) =>state.checkMate.valueChechMate);
-  const chessBoard = useSelector((state: RootState) => state.board.boardValue);
   
   return (
     <div className="overflow-hidden">

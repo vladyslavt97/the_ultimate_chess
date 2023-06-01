@@ -3,7 +3,6 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { FormEventHandler, useState } from "react";
 
-interface Props {}
 
 const SignIn: NextPage = (props): JSX.Element => {
   const [error, setError] = useState(false);
