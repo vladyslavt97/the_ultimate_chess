@@ -22,7 +22,6 @@ const SignIn: NextPage = (props): JSX.Element => {
 
     
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    // validate your userinfo
     e.preventDefault();
     const res = await signIn("credentials", {
       username: userInfo.username,
@@ -36,6 +35,7 @@ const SignIn: NextPage = (props): JSX.Element => {
   return (
     <div >
       {error && <h1 className="absolute top-52 text-red-600 flex justify-center items-center w-full">Invalid Credentials</h1>}
+
       <form onSubmit={handleSubmit} className="flex justify-center items-center flex-col h-screen gap-3 bg-blue-200">
         <input
           value={userInfo.username}
