@@ -1,6 +1,7 @@
 "use client"
 import GameOverComp from "@/components/GameOverComp";
 import ResetTheGame from "@/components/ResetTheGame"
+import WhoseTurn from "@/components/WhoseTurn";
 import Chessboard from "@/components/chess/Chessboard"
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
@@ -15,6 +16,7 @@ export default function Page({}: Props) {
       <div className="flex justify-center gap-10 mt-10 -mb-10">
         <h1 className=''>Chess</h1>
         <ResetTheGame/>
+        <WhoseTurn/>
       </div>
       <Chessboard/>
       {isGameover && 
